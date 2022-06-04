@@ -1,0 +1,27 @@
+name: Java CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - run: git checkout HEAD
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+      - name: install
+        run: mvn clean install -pl nifi-nar-bundles/nifi-stateless-processor-bundle/nifi-stateless-processor-tests -am
+      - name: test compile
+        run: mvn test-compile -pl nifi-nar-bundles/nifi-stateless-processor-bundle/nifi-stateless-processor-tests -am
+      - name: run the test
+        run: mvn -pl nifi-nar-bundles/nifi-stateless-processor-bundle/nifi-stateless-processor-tests test -Dtest=org.apache.nifi.processors.stateless.TestExecuteStateless#testSplitWithParameters
+      - name: run the nondex
+        run: mvn -pl nifi-nar-bundles/nifi-stateless-processor-bundle/nifi-stateless-processor-tests edu.illinois:nondex-maven-plugin:1.1.2:nondex -Dtest=org.apache.nifi.processors.stateless.TestExecuteStateless#testSplitWithParameters -DnondexRuns=100
+      - name: run the nondex-debug
+        run: mvn -pl nifi-nar-bundles/nifi-stateless-processor-bundle/nifi-stateless-processor-tests edu.illinois:nondex-maven-plugin:1.1.2:debug -Dtest=org.apache.nifi.processors.stateless.TestExecuteStateless#testSplitWithParameters -DnondexRuns=100
