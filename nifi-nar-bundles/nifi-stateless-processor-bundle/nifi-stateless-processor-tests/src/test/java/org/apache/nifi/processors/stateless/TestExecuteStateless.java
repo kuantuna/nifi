@@ -25,9 +25,6 @@ import org.apache.nifi.util.TestRunners;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -76,10 +73,9 @@ public class TestExecuteStateless {
         runner.assertTransferCount(ExecuteStateless.REL_OUTPUT, 3);
         final List<MockFlowFile> output = runner.getFlowFilesForRelationship(ExecuteStateless.REL_OUTPUT);
         output.forEach(ff -> ff.assertAttributeEquals("abc", "xyz"));
-        List<String> expectedList = Arrays.asList("The\nQuick\nBrown", "Fox\nJumps\nOver", "The\nLazy\nDog");
-        List<String> actualList = new ArrayList<>();
-        output.forEach(ff -> actualList.add(new String(ff.getData(), StandardCharsets.UTF_8)));
-        assertTrue(actualList.size() == expectedList.size() && actualList.containsAll(expectedList) && expectedList.containsAll(actualList));
+        output.get(0).assertContentEquals("The\nQuick\nBrown");
+        output.get(1).assertContentEquals("Fox\nJumps\nOver");
+        output.get(2).assertContentEquals("The\nLazy\nDog");
     }
 
     @Test

@@ -17,8 +17,6 @@ jobs:
           distribution: 'adopt'
       - name: install
         run: mvn clean install -pl nifi-nar-bundles/nifi-stateless-processor-bundle/nifi-stateless-processor-tests -am
-      - name: test compile
-        run: mvn test-compile -pl nifi-nar-bundles/nifi-stateless-processor-bundle/nifi-stateless-processor-tests -am
       - name: run the test
         run: mvn -pl nifi-nar-bundles/nifi-stateless-processor-bundle/nifi-stateless-processor-tests test -Dtest=org.apache.nifi.processors.stateless.TestExecuteStateless#testSplitWithParameters
       - name: run the nondex
